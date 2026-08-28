@@ -1,0 +1,57 @@
+[project]
+name = "news_decomp"
+version = "0.0.7"
+description = "News decomposition for real-time forecasts"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name="Guido Bonatti", email="Guido.Bonatti@bankofengland.co.uk"},
+    {name="Kensley Blaise", email="Kensley.Blaise@bankofengland.co.uk"},
+    {name="Paul Labonne", email="Paul.Labonne@bankofengland.co.uk"},
+    {name="Nades Raviraj", email="Nades.Raviraj@bankofengland.co.uk"},
+]
+
+maintainers = [
+    {name="Guido Bonatti", email="Guido.Bonatti@bankofengland.co.uk"},
+    {name="Kensley Blaise", email="Kensley.Blaise@bankofengland.co.uk"},
+    {name="Paul Labonne", email="Paul.Labonne@bankofengland.co.uk"},
+    {name="Nades Raviraj", email="Nades.Raviraj@bankofengland.co.uk"},
+]
+
+
+license = "MIT"
+keywords = ["time-series", "forecasting", "news", "decomposition", "revisions"]
+
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "pandera",
+]
+
+[project.optional-dependencies]
+dev = [
+    "marimo",
+    "pydoclint",
+    "ruff",
+    "pytest",
+    "pyarrow",
+    "syrupy",
+    "pre-commit",
+]
+
+docs = [
+    "mkdocstrings[python]",
+    "pymdown-extensions<11",
+    "zensical",
+]
+
+notebooks = [
+    "marimo==0.24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

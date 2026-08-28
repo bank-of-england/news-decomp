@@ -1,0 +1,74 @@
+[project]
+site_name = "News Decomposition"
+site_description = "Documentation for the news_decomp Python package."
+site_author = "Bank of England"
+copyright = "Copyright &copy; 2026 Bank of England"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Notebooks" = [{ "Example Data" = "notebooks/example_data.md" }] },
+  { "API Reference" = "api.md" },
+  { "News Decomposition" = "news_decomp.md" },
+]
+
+[project.plugins.mkdocstrings]
+enabled = true
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "numpy"
+docstring_section_style = "spacy"
+show_source = false
+show_bases = false
+show_root_heading = true
+show_root_toc_entry = true
+members_order = "source"
+heading_level = 3
+separate_signature = true
+show_signature_annotations = true
+signature_crossrefs = true
+
+[project.theme]
+language = "en"
+features = [
+  "navigation.footer",
+  "navigation.instant",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.markdown_extensions]
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+toc.permalink = true
+pymdownx.arithmatex.generic = true
+pymdownx.details = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.superfences = {}
+pymdownx.tabbed.alternate_style = true
+pymdownx.tasklist.custom_checkbox = true
