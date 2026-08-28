@@ -9,6 +9,14 @@ nav = [
   { "Notebooks" = [{ "Example Data" = "notebooks/example_data.md" }] },
   { "API Reference" = "api.md" },
   { "News Decomposition" = "news_decomp.md" },
+  { "About" = "about.md" },
+  { "Contributing" = "https://github.com/bank-of-england/news-decomp/blob/main/CONTRIBUTING.md" },
+]
+
+# Load MathJax for the LaTeX equations in the documentation.
+extra_javascript = [
+  "javascripts/mathjax.js",
+  { url = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js", async = true },
 ]
 
 [project.plugins.mkdocstrings]

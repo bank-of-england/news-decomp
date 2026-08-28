@@ -79,6 +79,7 @@ satisfy the schema in `src/news_decomp/schema.py`; see
 - [News Decomposition data contract](docs/news_decomp.md): schema, identities,
   and worked examples.
 - [API reference](docs/api.md): public classes and methods.
+- [About](docs/about.md).
 - The `examples/` directory contains runnable scripts for simulation, metrics,
   reports, and Marimo.
 

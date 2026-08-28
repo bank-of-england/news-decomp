@@ -8,9 +8,9 @@ on the model that generated them.
 It answers two related questions:
 
 - **Level decomposition**: what does each input contribute to one forecast?
-  $$\hat y \;=\; \sum_{\text{component}} \text{contribution}$$
+  \[\hat y \;=\; \sum_{\text{component}} \text{contribution}\]
 - **News decomposition**: what explains a forecast *revision* between two vintages?
-  $$\hat y_{v_1} - \hat y_{v_0} \;=\; \sum_{\text{component}} \text{contribution}$$
+  \[\hat y_{v_1} - \hat y_{v_0} \;=\; \sum_{\text{component}} \text{contribution}\]
 
 The module reads one standardised table and does not import model classes.
 Upstream code computes weights, surprises, and counterfactuals; this document
@@ -38,15 +38,15 @@ additive component of either a forecast level or a forecast revision.
 | `component` | str | no | Contributor name (see namespace below) |
 | `revision_source` | str | yes | Revision part: `"news"`, `"reestimation"`, or `"interaction"`. Blank (`NaN`) for level rows. |
 | `contribution` | float | no | Signed additive contribution. The contributions close the level or revision identity. |
-| `weight` | float | yes | Linear-model weight $w_i$ when the factorisation with `news` applies. |
-| `news` | float | yes | Surprise $x_i - E[x_i \mid \Omega_{v_0}]$ for a linear news row. |
+| `weight` | float | yes | Linear-model weight \(w_i\) when the factorisation with `news` applies. |
+| `news` | float | yes | Surprise \(x_i - E[x_i \mid \Omega_{v_0}]\) for a linear news row. |
 | `forecast_metric` | str | no | Transform used for the forecast, such as `"levels"`, `"pop"`, or `"yoy"`. |
 
 For a linear model, the contribution factorises as follows:
 
-$$
+\[
 \mathrm{contribution}_i \;=\; \underbrace{\mathrm{weight}_i}_{w_i} \;\times\; \underbrace{\mathrm{news}_i}_{x_i - E[x_i\mid\Omega_{v_0}]}
-$$
+\]
 
 `weight` and `news` explain the contribution. They distinguish a large surprise
 with a small weight from a small surprise with a large weight. Both are
@@ -66,8 +66,8 @@ share the same decomposition value.
 
 | `decomposition` | `base_vintage_date` | `revision_source` | Additive identity |
 |---|---|---|---|
-| `"level"` | `NaT` | blank | $\hat y = \sum \text{contribution}$ |
-| `"revision"` | old vintage date | `news` / `reestimation` / `interaction` | $\Delta\hat y = \sum \text{contribution}$ |
+| `"level"` | `NaT` | blank | \(\hat y = \sum \text{contribution}\) |
+| `"revision"` | old vintage date | `news` / `reestimation` / `interaction` | \(\Delta\hat y = \sum \text{contribution}\) |
 
 For revision rows, `revision_source` splits the revision into three pieces:
 
@@ -99,9 +99,9 @@ Suppose a linear MIDAS model, `sc_midas`, forecasts quarterly US GDP growth
 (`gdpkp`) for **2026-Q2**. A new payrolls release arrives, and the model runs
 again:
 
-- Old vintage `v0 = 2026-05-01`: $\hat y_{v_0} = 1.80$
-- New vintage `v1 = 2026-05-15`: $\hat y_{v_1} = 2.05$
-- Revision to explain: $\Delta\hat y = 2.05 - 1.80 = +0.25$
+- Old vintage `v0 = 2026-05-01`: \(\hat y_{v_0} = 1.80\)
+- New vintage `v1 = 2026-05-15`: \(\hat y_{v_1} = 2.05\)
+- Revision to explain: \(\Delta\hat y = 2.05 - 1.80 = +0.25\)
 
 **1. Level decomposition of the new forecast** (`decomposition = "level"`,
 with a blank `revision_source`). This answers: what makes up 2.05?
@@ -114,7 +114,7 @@ with a blank `revision_source`). This answers: what makes up 2.05?
 | gdpkp | 2026-06-30 | 0 | sc_midas | 2026-05-15 | NaT | level | `ip` | — | 0.15 | 0.15 | — | pop |
 | gdpkp | 2026-06-30 | 0 | sc_midas | 2026-05-15 | NaT | level | `residual` | — | 0.05 | — | — | pop |
 
-Level invariant: $0.50 + 0.70 + 0.65 + 0.15 + 0.05 = 2.05 = \hat y_{v_1}$ ✓
+Level invariant: \(0.50 + 0.70 + 0.65 + 0.15 + 0.05 = 2.05 = \hat y_{v_1}\) ✓
 
 **2. News decomposition of the revision** (`decomposition = "revision"`,
 `base_vintage_date = 2026-05-01`). Payrolls produced a +40k surprise, and the
@@ -127,10 +127,10 @@ parameters changed slightly. This answers: what explains the +0.25 revision?
 | gdpkp | 2026-06-30 | sc_midas | 2026-05-15 | 2026-05-01 | revision | `bls_payrolls` | reestimation | 0.08 | — | — | pop |
 | gdpkp | 2026-06-30 | sc_midas | 2026-05-15 | 2026-05-01 | revision | `residual` | news | 0.01 | — | — | pop |
 
-Revision invariant: $0.18 + (-0.02) + 0.08 + 0.01 = 0.25 = \hat y_{v_1} - \hat y_{v_0}$ ✓
+Revision invariant: \(0.18 + (-0.02) + 0.08 + 0.01 = 0.25 = \hat y_{v_1} - \hat y_{v_0}\) ✓
 
-Factor consistency (linear `news` rows only): $0.0045 \times 40.0 = 0.18$ and
-$0.010 \times (-2.0) = -0.02$ ✓. The `reestimation` and `residual` rows carry no
+Factor consistency (linear `news` rows only): \(0.0045 \times 40.0 = 0.18\) and
+\(0.010 \times (-2.0) = -0.02\) ✓. The `reestimation` and `residual` rows carry no
 `weight`/`news`, so the check is skipped.
 
 This example shows the main conventions: `bls_payrolls` keeps the same label in
@@ -144,20 +144,20 @@ surprise.
 ## Checks performed by the consumer
 
 For **level rows** (`decomposition == "level"`):
-$$
+\[
 \sum_{\text{component}} \text{contribution} \;=\; \hat y_{(\text{variable},\,\text{date},\,\text{horizon},\,\text{source},\,\text{vintage})}
-$$
+\]
 
 For **revision rows** (`decomposition == "revision"`), sum every
 `revision_source`:
-$$
+\[
 \sum_{\text{component}} \text{contribution} \;=\; \hat y_{\text{vintage}} - \hat y_{\text{base\_vintage}}
-$$
+\]
 
 When both factors are present, the consumer also checks:
-$$
+\[
 \text{weight} \times \text{news} \;=\; \text{contribution}
-$$
+\]
 
 ### Grouping keys
 
@@ -210,7 +210,7 @@ rev.groupby("component")["contribution"].sum().sort_values(key=abs, ascending=Fa
 
 `contribution` gives the change in forecast units, and `component` identifies
 the source of that change. The sum equals
-$\hat y_{v_1} - \hat y_{v_0}$.
+\(\hat y_{v_1} - \hat y_{v_0}\).
 
 ### "…because of new data, or because the model re-estimated?"
 
@@ -227,7 +227,7 @@ To attribute the move only to new data, keep `revision_source == "news"`.
 
 For linear `news` rows, the contribution factorises as `weight × news`:
 
-- `news` — the surprise $x_i - E[x_i \mid \Omega_{v_0}]$, in the indicator's own units
+- `news` — the surprise \(x_i - E[x_i \mid \Omega_{v_0}]\), in the indicator's own units
 - `weight` — the forecast's sensitivity to that indicator
 
 ```python
@@ -367,21 +367,21 @@ Let \( y_\tau \) denote realised GDP growth in quarter \( \tau \), and
 
 **Root mean squared error (RMSE)**
 
-$$
+\[
 \mathrm{RMSE}
 \;=\;
 \sqrt{\frac{1}{T}\sum_{\tau=1}^{T}(y_\tau - \hat y_\tau)^2}
-$$
+\]
 
 RMSE gives more weight to large misses, so unusual episodes affect it strongly.
 
 **Mean absolute error (MAE)**
 
-$$
+\[
 \mathrm{MAE}
 \;=\;
 \frac{1}{T}\sum_{\tau=1}^{T}\lvert y_\tau - \hat y_\tau \rvert
-$$
+\]
 
 MAE measures the average absolute nowcast error in GDP growth points.
 
@@ -395,28 +395,28 @@ removed.
 
 **Marginal contribution**
 
-$$
+\[
 \Delta_{j,\tau}
 \;=\;
 \hat y_\tau(\Omega_t) - \hat y_\tau(\Omega_t^{(-j)})
-$$
+\]
 
 This is the change in the quarter-\( \tau \) nowcast that indicator \( j \)
 provides.
 
 **Signal magnitude**
 
-$$
+\[
 V_j^{\mathrm{abs}}
 \;=\;
 \frac{1}{T}\sum_{\tau=1}^{T}\lvert \Delta_{j,\tau} \rvert
-$$
+\]
 
 This measures how much indicator \( j \) usually moves the nowcast.
 
 **Directional accuracy (hit rate)**
 
-$$
+\[
 H_j
 \;=\;
 \frac{1}{T}\sum_{\tau=1}^{T}
@@ -426,14 +426,14 @@ H_j
 <
 \lvert y_\tau-\hat y_\tau(\Omega_t^{(-j)})\rvert
 \right)
-$$
+\]
 
 This is the share of quarters in which indicator \( j \) moves the nowcast
 closer to realised GDP.
 
 **Average error improvement**
 
-$$
+\[
 E_j
 \;=\;
 \frac{1}{T}\sum_{\tau=1}^{T}
@@ -442,7 +442,7 @@ E_j
 -
 \lvert y_\tau-\hat y_\tau(\Omega_t)\rvert
 \right]
-$$
+\]
 
 This measures the average reduction in forecast error from indicator \( j \).
 
@@ -453,11 +453,11 @@ This measures the average reduction in forecast error from indicator \( j \).
 Observed usefulness combines predictive content with release-calendar effects.
 The framework separates them by estimating:
 
-$$
+\[
 V_{j,k}^{\mathrm{abs}}
 \;=\;
 \alpha_j + \beta_j n_{j,k} + \eta_{j,k}
-$$
+\]
 
 where:
 
@@ -476,7 +476,7 @@ timing. An indicator with high \( \beta_j \) gains more value from early release
 To compare indicators after accounting for publication delay, the framework
 also uses information density:
 
-$$
+\[
 D_j
 \;=\;
 \frac{V_j^{\mathrm{abs}}}{w_j},
@@ -484,7 +484,7 @@ D_j
 D_j^*
 \;=\;
 \frac{\alpha_j}{w_j}
-$$
+\]
 
 where \( w_j \) is the publication delay in weeks.
 
@@ -507,10 +507,12 @@ information, rather than only because they arrive early.
 
 Two papers motivate this framework:
 
-- **Giannone, Reichlin and Small (2008)**: a foundational mixed-frequency
-    nowcasting framework based on dynamic factor models.
-- **Banbura and Modugno (2014)**: estimation and news decomposition for
-    ragged-edge data with missing observations.
+- Giannone, D., Reichlin, L., and Small, D. (2008),
+    [“Nowcasting: The real-time informational content of macroeconomic data”](https://doi.org/10.1162/jpet.2008.26.4.665),
+  *Journal of Monetary Economics*, 55(4), 665–676.
+- Bańbura, M., and Modugno, M. (2014),
+  [“Maximum likelihood estimation of factor models on datasets with arbitrary pattern of missing data”](https://doi.org/10.1002/jae.2306),
+  *Journal of Applied Econometrics*, 29(1), 133–160.
 
 ---
 
