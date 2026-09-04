@@ -30,8 +30,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# ``dev`` is the full contributor set: tooling plus everything the quality
+# checks need, so ``pip install -e ".[dev]"`` is all that is required.
 dev = [
-    "marimo",
+    "news_decomp[docs,notebooks]",
     "pydoclint",
     "ruff",
     "pytest",
