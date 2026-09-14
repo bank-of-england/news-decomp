@@ -34,6 +34,7 @@ dependencies = [
 # checks need, so ``pip install -e ".[dev]"`` is all that is required.
 dev = [
     "news_decomp[docs,notebooks]",
+    "conventional-pre-commit>=4.4.0",
     "pydoclint",
     "ruff",
     "pytest",
